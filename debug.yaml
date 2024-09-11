@@ -6,7 +6,7 @@ metadata:
 spec:
   containers:
   - name: debug
-    image: Sathishreddy27/debug:v1.0
+    image: sathishreddy27/debug:v1.0
     resources:
     # soft limit
     requests:
