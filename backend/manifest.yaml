@@ -5,7 +5,7 @@ metadata:
   namespace: expense
 data:
   #DB_HOST: mysql # mysql component service name
-  DB_HOST: db-dev.daws78s.online
+  DB_HOST: mysql
 ---
 kind: Deployment
 apiVersion: apps/v1
