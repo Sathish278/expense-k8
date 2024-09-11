@@ -150,7 +150,7 @@ metadata:
   name: frontend
   namespace: expense
 spec:
-  #type: LoadBalancer
+  type: LoadBalancer
   selector:
     component: frontend
     project: expense
