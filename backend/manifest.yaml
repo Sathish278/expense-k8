@@ -1,0 +1,82 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: backend
+  namespace: expense
+data:
+  #DB_HOST: mysql # mysql component service name
+  DB_HOST: db-dev.daws78s.online
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: backend
+  namespace: expense
+  # these labels are deployment related labels
+  labels:
+    component: backend
+    project: expense
+    tier: app
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      component: backend
+      project: expense
+      tier: app
+  # pod definition
+  template:
+    metadata:
+      labels:
+        component: backend
+        project: expense
+        tier: app
+    spec:
+      initContainers:
+      - name: init-myservice
+        image: busybox:1.28
+        command: ['sh', '-c', "until nslookup db-dev.daws78s.online; do echo waiting for myservice; sleep 2; done"]
+      containers:
+      - name: backend
+        image: sathishreddy27/backend:v1.0
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "150m"
+            memory: "256Mi"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          failureThreshold: 2
+          periodSeconds: 5
+          initialDelaySeconds: 30
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          failureThreshold: 2
+          periodSeconds: 5
+          initialDelaySeconds: 30
+        envFrom:
+        - configMapRef:
+            name: backend
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  namespace: expense
+spec:
+  selector:
+    component: backend
+    project: expense
+    tier: app
+  ports:
+  - protocol: TCP
+    port: 8080 #service-port
+    targetPort: 8080 #target-port
