@@ -1,5 +1,5 @@
-kind: Pod
 apiVersion: v1
+kind: Pod
 metadata:
   name: debug
   namespace: expense
@@ -8,8 +8,7 @@ spec:
   - name: debug
     image: sathishreddy27/debug:v1.0
     resources:
-    # soft limit
-    requests:
-      cpu: "100m"
-      memory: "128Mi"
-      
+      requests:
+        cpu: "100m"
+        memory: "128Mi"
+        
